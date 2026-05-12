@@ -1282,6 +1282,8 @@ V1 需要支持以下模板：
 
 ## 12. V1 核心接口草案
 
+> 注意：本章节为早期接口草案，实际开发以 `接口设计/CodeCoachAI_V1_接口设计总览.md` 及各模块接口设计文档为准。若本章节与接口设计文档不一致，以接口设计文档为最高依据。
+
 ## 12.1 auth-service
 
 ```text
@@ -1300,6 +1302,7 @@ PUT  /users/profile
 GET  /users/overview
 GET  /admin/users
 PUT  /admin/users/{id}/status
+GET  /admin/roles
 ```
 
 ## 12.3 question-service
@@ -1307,31 +1310,35 @@ PUT  /admin/users/{id}/status
 ```text
 GET  /questions
 GET  /questions/{id}
-POST /questions/answer
+POST /questions/{id}/answers
 POST /questions/{id}/favorite
 DELETE /questions/{id}/favorite
 GET  /questions/favorites
-GET  /questions/wrongs
+GET  /questions/wrong-records
 PUT  /questions/{id}/mastery
 
 GET  /admin/questions
 POST /admin/questions
 PUT  /admin/questions/{id}
+PUT  /admin/questions/{id}/status
 DELETE /admin/questions/{id}
 
 GET  /admin/question-categories
 POST /admin/question-categories
 PUT  /admin/question-categories/{id}
+PUT  /admin/question-categories/{id}/status
 DELETE /admin/question-categories/{id}
 
 GET  /admin/question-tags
 POST /admin/question-tags
 PUT  /admin/question-tags/{id}
+PUT  /admin/question-tags/{id}/status
 DELETE /admin/question-tags/{id}
 
 GET  /admin/question-groups
 POST /admin/question-groups
 PUT  /admin/question-groups/{id}
+PUT  /admin/question-groups/{id}/status
 DELETE /admin/question-groups/{id}
 ```
 
@@ -1358,6 +1365,7 @@ POST /interviews/{id}/start
 GET  /interviews/{id}/current
 POST /interviews/{id}/answer
 POST /interviews/{id}/finish
+POST /interviews/{id}/report/retry
 GET  /interviews
 GET  /interviews/{id}
 GET  /interviews/{id}/report
@@ -1366,14 +1374,16 @@ GET  /interviews/{id}/report
 ## 12.6 ai-service
 
 ```text
-POST /ai/interview/question
-POST /ai/interview/evaluate
-POST /ai/interview/follow-up
-POST /ai/interview/report
+POST /inner/ai/interview/question
+POST /inner/ai/interview/evaluate
+POST /inner/ai/interview/follow-up
+POST /inner/ai/interview/report
 
 GET  /admin/ai/prompts
+GET  /admin/ai/prompts/{id}
 POST /admin/ai/prompts
 PUT  /admin/ai/prompts/{id}
+PUT  /admin/ai/prompts/{id}/status
 GET  /admin/ai/logs
 GET  /admin/ai/logs/{id}
 ```
@@ -1382,10 +1392,15 @@ GET  /admin/ai/logs/{id}
 
 ```text
 GET  /admin/menus
-GET  /admin/roles
 GET  /admin/configs
+POST /admin/configs
+GET  /admin/configs/{key}
 PUT  /admin/configs/{key}
+PUT  /admin/configs/{key}/status
+DELETE /admin/configs/{key}
 ```
+
+说明：`/admin/roles` 归属 user-service；system-service 不直接维护 `sys_role`、`sys_user_role`。
 
 ---
 
