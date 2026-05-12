@@ -1282,7 +1282,7 @@ V1 需要支持以下模板：
 
 ## 12. V1 核心接口草案
 
-> 注意：本章节为早期接口草案，实际开发以 `接口设计/CodeCoachAI_V1_接口设计总览.md` 及各模块接口设计文档为准。若本章节与接口设计文档不一致，以接口设计文档为最高依据。
+> 注意：本章节为早期接口草案，实际开发以 `CodeCoachAI_V1_接口设计总览.md` 及各模块接口设计文档为准。若本章节与接口设计文档存在不一致，以接口设计文档为最高依据。
 
 ## 12.1 auth-service
 
@@ -1304,6 +1304,14 @@ GET  /admin/users
 PUT  /admin/users/{id}/status
 GET  /admin/roles
 ```
+
+说明：
+
+1. `GET /admin/roles` 归属 user-service。
+2. user-service 管理 `sys_user`、`sys_role`、`sys_user_role`。
+3. V1 只需要 `USER`、`ADMIN` 两类基础角色。
+4. 不设计复杂 RBAC、菜单权限、按钮权限和数据权限。
+5. system-service 不直接维护角色和用户角色关系；如需角色相关统计，只能通过 Spring Cloud OpenFeign 调用 user-service 内部接口，不能直接查询 user-service 数据库表。
 
 ## 12.3 question-service
 
@@ -1342,6 +1350,13 @@ PUT  /admin/question-groups/{id}/status
 DELETE /admin/question-groups/{id}
 ```
 
+说明：
+
+1. `POST /questions/{id}/answers` 用于用户提交指定题目的答案。
+2. V1 刷题提交答案不调用 AI 评分。
+3. 刷题答案只保存用户答题记录、错题、掌握状态等数据。
+4. `GET /questions/wrong-records` 用于查询当前用户错题列表，只返回当前用户自己的错题。
+
 ## 12.4 resume-service
 
 ```text
@@ -1371,6 +1386,18 @@ GET  /interviews/{id}
 GET  /interviews/{id}/report
 ```
 
+说明：
+
+1. `POST /interviews/{id}/answer` 需要返回 AI 评分、AI 点评、`nextAction`、下一题或追问题。
+2. `nextAction` 枚举包括 `FOLLOW_UP`、`NEXT_QUESTION`、`NEXT_STAGE`、`FINISH`。
+3. `POST /interviews/{id}/answer` 不直接生成面试报告。
+4. 当 `nextAction = FINISH` 时，前端继续调用 `POST /interviews/{id}/finish`。
+5. `POST /interviews/{id}/finish` 用于结束面试，V1 可同步生成报告。
+6. 报告成功时 `reportStatus = GENERATED`。
+7. 报告失败时 `reportStatus = FAILED`，并记录失败原因；面试主状态仍可保持 `COMPLETED`，表示问答流程已结束。
+8. `POST /interviews/{id}/report/retry` 用于报告生成失败或未生成时重试。
+9. 报告重试只允许当前用户操作自己的面试报告，仅 `reportStatus = FAILED` 或 `NOT_GENERATED` 时允许调用，不重复生成多份有效报告。
+
 ## 12.6 ai-service
 
 ```text
@@ -1388,6 +1415,14 @@ GET  /admin/ai/logs
 GET  /admin/ai/logs/{id}
 ```
 
+说明：
+
+1. `/inner/ai/**` 能力接口只允许 interview-service 内部通过 Spring Cloud OpenFeign 调用。
+2. 前端不能直接访问 `/inner/ai/**`。
+3. Gateway 不对外暴露 `/inner/**`。
+4. AI 能力接口不作为用户端 API。
+5. 前端只访问 interview-service 的 `/interviews/**` 接口，由 interview-service 编排 AI 提问、评分、追问和报告生成。
+
 ## 12.7 system-service
 
 ```text
@@ -1401,6 +1436,17 @@ DELETE /admin/configs/{key}
 ```
 
 说明：`/admin/roles` 归属 user-service；system-service 不直接维护 `sys_role`、`sys_user_role`。
+
+## 12.8 `/inner/**` 内部接口安全边界
+
+1. `/inner/**` 只用于服务内部 Spring Cloud OpenFeign 调用。
+2. 前端不允许直接访问 `/inner/**`。
+3. Gateway 不对外暴露 `/inner/**`。
+4. AI 能力接口 `/inner/ai/**` 只允许 interview-service 调用。
+5. 内部接口仍需要服务间鉴权或内部调用标识，不能只依赖“前端不调用”作为安全措施。
+6. 涉及用户数据的内部接口必须透传可信 `userId` 或用户上下文，并进行数据归属校验。
+7. auth-service 不直接操作 `sys_user`、`sys_role`、`sys_user_role`，只能通过 user-service 内部接口完成认证相关查询。
+8. interview-service 不直接访问 question-service、resume-service、ai-service 的数据库表，只通过 `/inner/**` 内部接口调用。
 
 ---
 
