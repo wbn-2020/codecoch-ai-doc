@@ -2,61 +2,88 @@
 
 ## Project identity
 
-This repository is the documentation repository of CodeCoachAI, an AI interview training platform.
-
-Current project phase:
-- V1 code is considered functionally complete.
-- Documentation is not yet synchronized with the final V1 code.
-- The immediate priority is V1 documentation closure before V2 development.
-- After V1 documentation is frozen, use this repository as the durable project memory for future Codex sessions.
+This repository is the documentation repository and durable project memory center of CodeCoachAI, an AI interview training platform.
 
 Related repositories:
 - Frontend: https://github.com/wbn-2020/codecoch-ai-vue.git
 - Backend: https://github.com/wbn-2020/codecoch-ai-java.git
 - Docs: https://github.com/wbn-2020/codecoch-ai-doc.git
 
+## Current phase
+
+- V1 has been completed.
+- CodeCoachAI is moving toward the official V2 PRD implementation.
+- The current implementation already contains a group of V2 technical baseline and AI interview enhancement prerequisites:
+  - service-side ADMIN secondary checks for `/admin/**`;
+  - HMAC signature protection for `/inner/**` internal calls;
+  - AI call stability improvements;
+  - resume project deep-dive enhancement;
+  - early learning feedback in interview reports.
+- These completed items are not the full V2 PRD.
+
+Do not describe "security baseline + AI stability + project deep dive + learning feedback prototype" as complete V2.
+
+## V2 source of truth
+
+The only authoritative source for V2 scope is:
+
+`PRD/CodeCoachAI_PRD_V2_AI能力增强版.md`
+
+If any of the following conflict with the official V2 PRD, the official V2 PRD wins:
+
+1. `V2_ROADMAP_DRAFT.md`
+2. `PROJECT_STATE.md`
+3. `AGENTS.md`
+4. `NEW_CODEX_SESSION_PROMPT.md`
+5. old chat history
+6. Codex historical output
+7. previous temporary roadmaps
+
+`V2_ROADMAP_DRAFT.md` is only valid when it is aligned with the official V2 PRD.
+
 ## Documentation role
 
-This repo is the project memory center.
-
 Keep these documents current:
-- `PROJECT_STATE.md` — current phase, completed work, open risks
-- `V1_RELEASE_NOTES_DRAFT.md` — final V1 summary
-- `V2_ROADMAP_DRAFT.md` — V2 planning
+- `PROJECT_STATE.md` — current phase, completed baseline, open V2 gaps, execution order
+- `PRD/CodeCoachAI_PRD_V2_AI能力增强版.md` — official V2 scope
+- `CodeCoachAI_V2_PRD差距清单.md` — V2 PRD gap list
+- `CodeCoachAI_V2_后端开发路线.md` — backend-first implementation route
+- `V2_ROADMAP_DRAFT.md` — V2 roadmap aligned with the official PRD
 - API contract docs — actual backend/frontend interface agreement
 - `TASK_LOG.md` — major task history and decisions
 - `NEW_CODEX_SESSION_PROMPT.md` — prompt to start a clean Codex session
 
-## V1 documentation closure checklist
+## V2 development rules
 
-Before declaring V1 final, confirm and document:
+Every V2 development task must state:
 
-1. V1 scope
-2. Final frontend route list
-3. Final backend service/module list
-4. Final API contract
-5. Database table list
-6. User-side flow
-7. Admin-side flow
-8. AI mock mode vs real model mode
-9. Known limitations
-10. V1 acceptance test checklist
-11. V2 backlog
+1. corresponding PRD section;
+2. priority: P0 / P1 / P2;
+3. affected backend services;
+4. affected database tables;
+5. affected interfaces;
+6. whether frontend is affected.
+
+Current execution strategy:
+
+1. complete the V2 backend first;
+2. then complete the V2 frontend;
+3. finally run full integration and E2E testing.
 
 ## Non-negotiable rules
 
-1. Do not write docs based only on old PRD assumptions. Align with actual code.
-2. If code and docs conflict, mark the conflict and ask the user whether to update docs or code.
-3. Use "V1 completed", "V1 pending verification", and "V2 planned" labels clearly.
-4. Keep docs concise enough for Codex to read in new sessions.
-5. When AGENTS.md becomes too long, keep this file short and reference dedicated markdown files.
+1. Do not write V2 docs based on old roadmap assumptions.
+2. Do not rely on old chat history as V2 scope evidence.
+3. Do not narrow or expand V2 scope without explicitly comparing against the official V2 PRD.
+4. If code and docs conflict, mark the conflict and ask whether to update docs or code.
+5. Keep docs concise enough for Codex to read in new sessions.
 
 ## Required response format for Codex
 
-When completing a documentation task, report:
+When completing a documentation or planning task, report:
 
-1. Documents modified
-2. Source of truth used
-3. Important corrections made
-4. Remaining outdated areas
-5. Next documentation task
+1. documents modified;
+2. source of truth used;
+3. important corrections made;
+4. remaining outdated areas;
+5. next task.

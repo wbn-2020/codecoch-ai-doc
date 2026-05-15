@@ -38,3 +38,46 @@ Codex should be re-grounded from repository files instead of old chat history.
 3. Open a new Codex session.
 4. Ask Codex to read these files first.
 5. Let Codex synchronize V1 documentation before starting V2.
+
+## 2026-05-15 — V2 roadmap correction
+
+### Status
+
+V1 has been completed.
+
+During V2 planning review, the previous V2 development route was found to be based on a narrowed temporary roadmap and was not fully aligned with the official V2 PRD.
+
+### Main decision
+
+Use `PRD/CodeCoachAI_PRD_V2_AI能力增强版.md` as the only authoritative V2 scope source.
+
+If old chat history, Codex historical output, `V2_ROADMAP_DRAFT.md`, `PROJECT_STATE.md`, `AGENTS.md`, `NEW_CODEX_SESSION_PROMPT.md`, or previous temporary roadmaps conflict with the official V2 PRD, the official V2 PRD wins.
+
+### Classification correction
+
+The previously completed work is classified as V2 technical baseline and AI interview enhancement prerequisites:
+
+- service-side ADMIN secondary checks for `/admin/**`;
+- HMAC signature protection for `/inner/**` internal calls;
+- AI call stability enhancements;
+- resume project deep-dive capability enhancement;
+- early learning feedback in interview reports.
+
+These items are not complete V2.
+
+### Updated route
+
+The V2 route is adjusted to:
+
+1. complete the V2 backend first;
+2. then complete the V2 frontend;
+3. finally run full integration and E2E testing.
+
+### Documents added or corrected
+
+- `AGENTS.md`
+- `PROJECT_STATE.md`
+- `V2_ROADMAP_DRAFT.md`
+- `NEW_CODEX_SESSION_PROMPT.md`
+- `CodeCoachAI_V2_PRD差距清单.md`
+- `CodeCoachAI_V2_后端开发路线.md`
